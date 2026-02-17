@@ -1,13 +1,8 @@
 import './App.css'
+import Navbar from './components/Navbar'
 
 function App() {
-  return (
-    <>
-      <h1 className="text-5xl text-red-500 text-center m-4 font-italic underline">
-        Start your Frontend Development.
-      </h1>
-    </>
-  )
+  return <Navbar />
 }
 
 export default App
