@@ -1,6 +1,6 @@
 const Navbar = () => {
   return (
-    <nav className="p-2 flex gap-2">
+    <nav className="h-[10vh] p-2 flex gap-2 items-center">
       <div className="self-center font-[cursive] text-xl">Weather</div>
       <div className="w-full">
         <div className="w-fit md:w-7/10 m-auto rounded-md shadow-xl/20 ">
