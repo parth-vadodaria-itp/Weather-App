@@ -5,8 +5,8 @@ import WeatherData from './components/WeatherData'
 function App() {
   return (
     <>
-    <Navbar />
-    <WeatherData />
+      <Navbar />
+      <WeatherData />
     </>
   )
 }
