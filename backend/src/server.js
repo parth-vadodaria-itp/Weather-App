@@ -24,10 +24,10 @@ app.get("/weather-data", async (req, res) => {
     temp: Math.round(city.main.temp),
     temp_min: Math.round(city.main.temp_min),
     temp_max: Math.round(city.main.temp_max),
-    icon_url: `https://openweathermap.org/payload/api/media/file/${city.weather[0].icon}@2x.png`,
+    icon_url: `https://openweathermap.org/img/wn/${city.weather[0].icon}%402x.png`,
   };
   res.send({code: 200, weatherData});
-  // console.log(data);
+  // console.log(city);
 });
 
 app.listen(port, () => {
