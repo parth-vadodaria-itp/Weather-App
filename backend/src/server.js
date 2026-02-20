@@ -31,40 +31,42 @@ app.get("/weather-data", async (req, res) => {
   const { lat, lon } = req.query;
   const response = await fetchWeather(lat, lon);
   if (response.code !== 200) res.send(response);
-
-  const responseMsg = response.msg;
-  const weatherData = {
-    city: responseMsg.name,
-    temp: Math.round(responseMsg.main.temp),
-    temp_min: Math.round(responseMsg.main.temp_min),
-    temp_max: Math.round(responseMsg.main.temp_max),
-    icon_url: `https://openweathermap.org/img/wn/${responseMsg.weather[0].icon}@2x.png`,
-  };
-  res.send({ code: 200, weatherData });
+  else {
+    const responseMsg = response.msg;
+    const weatherData = {
+      city: responseMsg.name,
+      temp: Math.round(responseMsg.main.temp),
+      temp_min: Math.round(responseMsg.main.temp_min),
+      temp_max: Math.round(responseMsg.main.temp_max),
+      icon_url: `https://openweathermap.org/img/wn/${responseMsg.weather[0].icon}@2x.png`,
+    };
+    res.send({ code: 200, weatherData });
+  }
 });
 app.get("/weather-forecast", async (req, res) => {
   const { lat, lon } = req.query;
   const response = await fetchWeatherForecast(lat, lon);
   if (response.code !== 200) res.send(response);
-
-  let forecastList = response.msg.list;
-  forecastList = forecastList.map((forecast) => ({
-    date: new Date(forecast.dt_txt).toLocaleDateString("en-US", {
-      year: "2-digit",
-      month: "short",
-      day: "2-digit",
-    }),
-    time: new Date(forecast.dt_txt).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    }),
-    temp: Math.round(forecast.main.temp),
-    temp_min: Math.round(forecast.main.temp_min),
-    temp_max: Math.round(forecast.main.temp_max),
-    icon_url: `https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`,
-  }));
-  res.send({ code: 200, forecastList });
+  else {
+    let forecastList = response.msg.list;
+    forecastList = forecastList.map((forecast) => ({
+      date: new Date(forecast.dt_txt).toLocaleDateString("en-US", {
+        year: "2-digit",
+        month: "short",
+        day: "2-digit",
+      }),
+      time: new Date(forecast.dt_txt).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      }),
+      temp: Math.round(forecast.main.temp),
+      temp_min: Math.round(forecast.main.temp_min),
+      temp_max: Math.round(forecast.main.temp_max),
+      icon_url: `https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`,
+    }));
+    res.send({ code: 200, forecastList });
+  }
 });
 
 app.listen(port, () => {

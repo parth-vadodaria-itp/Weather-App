@@ -1,56 +1,28 @@
-import { useState, useEffect } from "react"
-import axios from "axios"
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
-const WeatherData = () => {
+const WeatherData = ({ userCoordinates }) => {
+  const [weatherData, setWeatherData] = useState(null)
 
-    const [weatherData, setWeatherData]=useState(null);
-
-    const getLocation=() => {
-        if(navigator.geolocation) navigator.geolocation.getCurrentPosition(success, error);
-        else{
-            alert("Geolocation is not supported by the browser.")
-        }
+  useEffect(() => {
+    const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL
+    if (userCoordinates !== null) {
+      const url =
+        baseUrl +
+        `/weather-data?lat=${userCoordinates.lat}&lon=${userCoordinates.lon}`
+      axios
+        .get(url)
+        .then((res) => {
+          if (res.data.code === 200) {
+            setWeatherData(res.data.weatherData)
+          } else alert('Something went wrong! Try again later.')
+        })
+        .catch((err) => {
+          alert('Something went wrong! Try again later.')
+          console.log(err)
+        })
     }
-    
-    const success = (position) => {
-        const baseUrl=import.meta.env.VITE_BACKEND_BASE_URL;
-        const url=baseUrl+`/weather-data?lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
-        axios.get(url)
-            .then((res) => {
-              console.log("success api call...")
-              console.log(res);
-                if(res.data.code===200){
-                    setWeatherData(res.data.weatherData);
-                }
-                else alert("Something went wrong! Try again later.")
-            })
-            .catch((err) => {
-                alert("Something went wrong! Try again later.")
-                console.log(err);
-            });
-    }
-    const error = (error) => {
-      switch(error.code){
-        case error.PERMISSION_DENIED:
-          alert("User denied the request for geolocation.");
-          break;
-        case error.PERMISSION_UNAVAILABLE:
-          alert("Location information is unavailable.");
-          break;
-        case error.TIMEOUT:
-          alert("The request to get user location timed out.");
-          break;
-        case error.UNKNOWN_ERROR:
-          alert("An unknown error occurred.");
-          break;
-        default:
-          alert("Something went wrong! Try again later.")
-      }
-    }
-
-    useEffect(() => {
-        getLocation();
-    },[])
+  }, [userCoordinates])
 
   return (
     <div className="relative w-[99vw] h-[40vh] m-auto">
@@ -62,17 +34,25 @@ const WeatherData = () => {
       <div className="absolute top-0 z-10 w-full h-full grid grid-cols-2 text-white place-items-center">
         <div className="">
           <span className="text-xl md:text-4xl font-semibold">
-            {weatherData!==null?weatherData.city:"---"}
+            {weatherData !== null ? weatherData.city : '---'}
           </span>
         </div>
         <div className="aspect-3/4 md:aspect-4/5 h-3/5 md:h-4/5 p-2 bg-linear-to-br from-green-400 via-pink-400/60 to-violet-800/60 rounded-2xl grid grid-rows-2 place-items-center">
-          <img src={weatherData!==null?weatherData.icon_url:null} alt="Visual weather condition" className="text-sm md:text-xl lg:text-base"/>
+          <img
+            src={weatherData !== null ? weatherData.icon_url : null}
+            alt="Visual weather condition"
+            className="text-sm md:text-xl lg:text-base"
+          />
           <div className="self-start flex flex-col gap-1 md:gap-7 lg:gap-2 items-center mt-2">
             <div className="text-2xl md:text-6xl lg:text-4xl font-semibold">
-              {weatherData!==null?weatherData.temp:"--"}<sup>&deg;C</sup>
+              {weatherData !== null ? weatherData.temp : '--'}
+              <sup>&deg;C</sup>
             </div>
             <div className="text-base md:text-3xl lg:text-lg">
-              {weatherData!==null?weatherData.temp_min:"--"}<sup>&deg;C</sup> - {weatherData!==null?weatherData.temp_max:"--"}<sup>&deg;C</sup>
+              {weatherData !== null ? weatherData.temp_min : '--'}
+              <sup>&deg;C</sup> -{' '}
+              {weatherData !== null ? weatherData.temp_max : '--'}
+              <sup>&deg;C</sup>
             </div>
           </div>
         </div>
