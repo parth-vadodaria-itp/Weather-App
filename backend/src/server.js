@@ -15,8 +15,10 @@ app.get("/weather-data", async (req, res) => {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${api_key}`;
 
   const response = await fetch(url);
-  const city = await response.json();
+  console.log(response);
+  if(!response.ok) res.send({code: 500, msg: "Internal Server Error"});
 
+  const city = await response.json();
   const weatherData = {
     city: city.name,
     temp: Math.round(city.main.temp),
@@ -24,7 +26,7 @@ app.get("/weather-data", async (req, res) => {
     temp_max: Math.round(city.main.temp_max),
     icon_url: `https://openweathermap.org/payload/api/media/file/${city.weather[0].icon}@2x.png`,
   };
-  res.send(weatherData);
+  res.send({code: 200, weatherData});
   // console.log(data);
 });
 
